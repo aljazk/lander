@@ -1,0 +1,203 @@
+<!DOCTYPE html PUBLIC>
+<html>
+<head>
+<title>Lander</title>	
+		<!--=============================-->
+		<!-- Copy this part to your app. -->
+		<!-- START                       -->
+		<!--=============================-->
+		<!-- libs -->
+		<!--[if IE]><script type="text/javascript" src="lib/excanvas.js"></script><![endif]-->
+    <script src="lib/prototype-1.6.0.2.js"></script>
+
+		<!-- box2djs -->
+    <script src='js/box2d/common/b2Settings.js'></script>
+    <script src='js/box2d/common/math/b2Vec2.js'></script>
+    <script src='js/box2d/common/math/b2Mat22.js'></script>
+    <script src='js/box2d/common/math/b2Math.js'></script>
+    <script src='js/box2d/collision/b2AABB.js'></script>
+    <script src='js/box2d/collision/b2Bound.js'></script>
+    <script src='js/box2d/collision/b2BoundValues.js'></script>
+    <script src='js/box2d/collision/b2Pair.js'></script>
+    <script src='js/box2d/collision/b2PairCallback.js'></script>
+    <script src='js/box2d/collision/b2BufferedPair.js'></script>
+    <script src='js/box2d/collision/b2PairManager.js'></script>
+    <script src='js/box2d/collision/b2BroadPhase.js'></script>
+    <script src='js/box2d/collision/b2Collision.js'></script>
+    <script src='js/box2d/collision/Features.js'></script>
+    <script src='js/box2d/collision/b2ContactID.js'></script>
+    <script src='js/box2d/collision/b2ContactPoint.js'></script>
+    <script src='js/box2d/collision/b2Distance.js'></script>
+    <script src='js/box2d/collision/b2Manifold.js'></script>
+    <script src='js/box2d/collision/b2OBB.js'></script>
+    <script src='js/box2d/collision/b2Proxy.js'></script>
+    <script src='js/box2d/collision/ClipVertex.js'></script>
+    <script src='js/box2d/collision/shapes/b2Shape.js'></script>
+    <script src='js/box2d/collision/shapes/b2ShapeDef.js'></script>
+    <script src='js/box2d/collision/shapes/b2BoxDef.js'></script>
+    <script src='js/box2d/collision/shapes/b2CircleDef.js'></script>
+    <script src='js/box2d/collision/shapes/b2CircleShape.js'></script>
+    <script src='js/box2d/collision/shapes/b2MassData.js'></script>
+    <script src='js/box2d/collision/shapes/b2PolyDef.js'></script>
+    <script src='js/box2d/collision/shapes/b2PolyShape.js'></script>
+    <script src='js/box2d/dynamics/b2Body.js'></script>
+    <script src='js/box2d/dynamics/b2BodyDef.js'></script>
+    <script src='js/box2d/dynamics/b2CollisionFilter.js'></script>
+    <script src='js/box2d/dynamics/b2Island.js'></script>
+    <script src='js/box2d/dynamics/b2TimeStep.js'></script>
+    <script src='js/box2d/dynamics/contacts/b2ContactNode.js'></script>
+    <script src='js/box2d/dynamics/contacts/b2Contact.js'></script>
+    <script src='js/box2d/dynamics/contacts/b2ContactConstraint.js'></script>
+    <script src='js/box2d/dynamics/contacts/b2ContactConstraintPoint.js'></script>
+    <script src='js/box2d/dynamics/contacts/b2ContactRegister.js'></script>
+    <script src='js/box2d/dynamics/contacts/b2ContactSolver.js'></script>
+    <script src='js/box2d/dynamics/contacts/b2CircleContact.js'></script>
+    <script src='js/box2d/dynamics/contacts/b2Conservative.js'></script>
+    <script src='js/box2d/dynamics/contacts/b2NullContact.js'></script>
+    <script src='js/box2d/dynamics/contacts/b2PolyAndCircleContact.js'></script>
+    <script src='js/box2d/dynamics/contacts/b2PolyContact.js'></script>
+    <script src='js/box2d/dynamics/b2ContactManager.js'></script>
+    <script src='js/box2d/dynamics/b2World.js'></script>
+    <script src='js/box2d/dynamics/b2WorldListener.js'></script>
+    <script src='js/box2d/dynamics/joints/b2JointNode.js'></script>
+    <script src='js/box2d/dynamics/joints/b2Joint.js'></script>
+    <script src='js/box2d/dynamics/joints/b2JointDef.js'></script>
+    <script src='js/box2d/dynamics/joints/b2DistanceJoint.js'></script>
+    <script src='js/box2d/dynamics/joints/b2DistanceJointDef.js'></script>
+    <script src='js/box2d/dynamics/joints/b2Jacobian.js'></script>
+    <script src='js/box2d/dynamics/joints/b2GearJoint.js'></script>
+    <script src='js/box2d/dynamics/joints/b2GearJointDef.js'></script>
+    <script src='js/box2d/dynamics/joints/b2MouseJoint.js'></script>
+    <script src='js/box2d/dynamics/joints/b2MouseJointDef.js'></script>
+    <script src='js/box2d/dynamics/joints/b2PrismaticJoint.js'></script>
+    <script src='js/box2d/dynamics/joints/b2PrismaticJointDef.js'></script>
+    <script src='js/box2d/dynamics/joints/b2PulleyJoint.js'></script>
+    <script src='js/box2d/dynamics/joints/b2PulleyJointDef.js'></script>
+    <script src='js/box2d/dynamics/joints/b2RevoluteJoint.js'></script>
+    <script src='js/box2d/dynamics/joints/b2RevoluteJointDef.js'></script>
+		<!--=============================-->
+		<!-- Copy this part to your app. -->
+		<!-- END                         -->
+		<!--=============================-->
+
+<script src="world.js"></script>
+</head>
+<body>
+<canvas id="window" width="100", height="100", oncontextmenu="return false;">
+if you can see this your browser does not support html5
+</canvas>
+<script>
+//define fps variables
+var lastFrameTime = (new Date()).getTime();
+var currentFrameTime; var elapsedTime; var fps = 1;
+//get windows size and create canvas
+var windowWidth = window.innerWidth-21;
+var windowHeight = window.innerHeight-21;
+document.getElementById("window").width = windowWidth;
+document.getElementById("window").height = windowHeight;
+var c = document.getElementById("window");
+var ctx = c.getContext("2d");
+//Create box2d world
+var world = createWrold();
+for(var i=0; i<windowHeight/50; i++){
+	createCircle(windowWidth/2,i*40-10);
+}
+createStat(450,500);
+createStat(400,windowHeight,windowWidth,20);
+createStat(0,500,20,windowHeight);
+createStat(windowWidth,500,20,windowHeight);
+var WorldX = windowWidth*3;
+var WorldY = windowHeight*3;
+var x = 10, z = 10, w = 1, g = 1;
+var dragx = 0, dragy = 0;
+var drag = false;
+var zoom = 1, posx = 0, posy = 0;
+var wheelData;
+//document.getElementById("demo").innerHTML = "World created";
+//start the loop
+window.requestAnimationFrame(mainLoop);
+function mainLoop(){
+	//Fps
+	currentFrameTime = (new Date()).getTime();
+	elapsedTime = currentFrameTime - lastFrameTime;
+	lastFrameTime = currentFrameTime;
+	
+	//resize canvas - get window size
+	windowWidth = window.innerWidth-21;
+	windowHeight = window.innerHeight-21;
+	document.getElementById("window").width = windowWidth;
+	document.getElementById("window").height = windowHeight;
+
+	document.addEventListener("mousedown", function(event){
+		if(x < 0){
+			if(event.button == 0){
+				createCircle(event.pageX-10, event.pageY-10);
+			} else if (event.button == 2){
+				createRect(event.pageX-10, event.pageY-10);
+			}
+			x = 1;
+		}
+		dragx = event.pageX, dragy = event.pageY;
+		drag = true;
+	});
+	x--;
+	document.addEventListener("mousemove", function(event){
+		if(g < 0 && drag){
+			posx -= (dragx - event.pageX);
+			posy -= (dragy - event.pageY);
+			dragx = event.pageX, dragy = event.pageY;
+			//document.getElementById("demo").innerHTML = posx+" "+posy;
+			g = 1;
+		}
+	});
+	g--;
+	document.addEventListener("mouseup", function(event){
+		drag = false;
+	});
+	if(z < 0){
+		createCircle((windowWidth/3+Math.floor((Math.random() * 10) + 1))*zoom+posx*zoom,0+posy*zoom);
+		createRect(((windowWidth/3)*2+Math.floor((Math.random() * 10) + 1))*zoom+posx*zoom,0+posy*zoom);
+		z = 30;
+	}
+	z--;
+	document.addEventListener("mousewheel", function(event){
+		if(w < 0){
+			if (0 < event.wheelDelta){
+				zoom += zoom/10;
+			} else if (0 > event.wheelDelta){
+				zoom -= zoom/10;
+			}
+			w = 1;
+		}
+	});
+	document.addEventListener("mousewheel", function(event){
+		if(w < 0){
+			if (0 < event.wheelDelta){
+				zoom += zoom/10;
+			} else if (0 > event.wheelDelta){
+				zoom -= zoom/10;
+			}
+			w = 1;
+		}
+	});
+	w--;
+	 
+	//Clear canvas
+	ctx.fillStyle = "white";
+	ctx.fillRect(0,0,windowWidth,windowHeight);
+	
+	if(fps > 10){
+		world.Step(1.0/fps, 1);
+	}
+	teleportSide(world);
+	var n = drawWorld(world);
+
+	ctx.font = '18px Calibri';
+	ctx.fillStyle = 'black';
+	ctx.fillText("Number of objects: " +n, 10,40);
+	displayFps();
+	window.requestAnimationFrame(mainLoop);
+}
+</script>
+</body>
+</html>
