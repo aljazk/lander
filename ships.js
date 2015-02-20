@@ -1,0 +1,84 @@
+
+function createShip(x,y, shipType){
+	x = x/zoom-posx;
+	y = y/zoom-posy;
+	var shipBody = new b2BodyDef();
+	var shipDef = new b2BoxDef();
+	switch(shipType){
+	case 1:
+		shipDef.allowSleep = false;
+		shipDef.extents.Set(40, 80);
+		shipDef.density = 1.0;
+		shipDef.restitution = 0.1;
+		shipDef.friction = 111;
+		shipDef.groupIndex = 2;
+		shipBody.AddShape(shipDef);
+		shipBody.position.Set(x,y);
+		shipHaul = world.CreateBody(shipBody);
+		shipDef.extents.Set(20, 30);
+		shipDef.density = 1.0;
+		shipDef.restitution = 0.1;
+		shipDef.friction = 111;
+		shipDef.groupIndex = 0;
+		shipBody.AddShape(shipDef);
+		shipBody.position.Set(x+40,y+60);
+		t1 = world.CreateBody(shipBody);
+		var jointDef = new b2RevoluteJointDef();
+		jointDef.anchorPoint.Set(x+40, y+60);
+		jointDef.body1 = shipHaul;
+		jointDef.body2 = t1;
+		jointDef.enableLimit = true;
+		world.CreateJoint(jointDef);
+		shipDef.extents.Set(20, 30);
+		shipDef.density = 1.0;
+		shipDef.restitution = 0.1;
+		shipDef.friction = 111;
+		shipBody.AddShape(shipDef);
+		shipBody.position.Set(x-40,y+60);
+		var jointDef = new b2RevoluteJointDef();
+		t2 = world.CreateBody(shipBody);
+		jointDef.anchorPoint.Set(x-40, y+60);
+		jointDef.body1 = shipHaul;
+		jointDef.body2 = t2;
+		jointDef.enableLimit = true;
+		world.CreateJoint(jointDef);
+		break;
+	default:
+		shipDef.allowSleep = false;
+		shipDef.extents.Set(40, 80);
+		shipDef.density = 1.0;
+		shipDef.restitution = 0.1;
+		shipDef.friction = 111;
+		shipDef.groupIndex = 2;
+		shipBody.AddShape(shipDef);
+		shipBody.position.Set(x,y);
+		shipHaul = world.CreateBody(shipBody);
+		shipDef.extents.Set(20, 30);
+		shipDef.density = 1.0;
+		shipDef.restitution = 0.1;
+		shipDef.friction = 111;
+		shipDef.groupIndex = 0;
+		shipBody.AddShape(shipDef);
+		shipBody.position.Set(x+40,y+60);
+		t1 = world.CreateBody(shipBody);
+		var jointDef = new b2RevoluteJointDef();
+		jointDef.anchorPoint.Set(x+40, y+60);
+		jointDef.body1 = shipHaul;
+		jointDef.body2 = t1;
+		jointDef.enableLimit = true;
+		world.CreateJoint(jointDef);
+		shipDef.extents.Set(20, 30);
+		shipDef.density = 1.0;
+		shipDef.restitution = 0.1;
+		shipDef.friction = 111;
+		shipBody.AddShape(shipDef);
+		shipBody.position.Set(x-40,y+60);
+		var jointDef = new b2RevoluteJointDef();
+		t2 = world.CreateBody(shipBody);
+		jointDef.anchorPoint.Set(x-40, y+60);
+		jointDef.body1 = shipHaul;
+		jointDef.body2 = t2;
+		jointDef.enableLimit = true;
+		world.CreateJoint(jointDef);
+	}
+}
