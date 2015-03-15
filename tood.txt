@@ -1,0 +1,5 @@
+1. button press works by keydown, change it to keyup
+2. make ship changer
+3. finish hud
+4. fuse hud with game
+3. find more bugs!

@@ -1,3 +1,4 @@
+var x = 10, z = 10, w = 1, g = 1, c = 1, b = 1;
 var mouseDown = false;
 
 function listenForEvents(){
@@ -7,9 +8,11 @@ function listenForEvents(){
 				checkButtonPress(event.pageX-8, event.pageY-8, 1);
 				mouseDown = true;
 			} else if (event.button == 1){
-				
+				loadShips();
 			} else if (event.button == 2){
-				createShip(event.pageX-10, event.pageY -10, 1);
+				var alignX = (event.pageX-10)/zoom-posx;
+				var alignY = (event.pageY-10)/zoom-posy;
+				createShip(alignX, alignY, 1);
 			}
 			x = 1;
 		}
@@ -63,8 +66,15 @@ function listenForEvents(){
 		if(event.keyCode == 68){//d
 			keyD = true;
 		}
+		if (event.keyCode == 8){
+			if(b < 0){
+				buttonInput(event.keyCode);
+				b = 1;
+			}
+		}
 		
 	});
+	b--;
 	document.addEventListener("keyup", function(event){
 		if(event.keyCode == 87){//w
 			keyW = false;
@@ -77,4 +87,15 @@ function listenForEvents(){
 		}
 		
 	});
+	
+	document.addEventListener("keypress", function(event){
+		if(c<0){
+			buttonInput(event.keyCode);
+			if (event.keyCode >= 48 && event.keyCode <= 57){
+				selectShip(event.keyCode-48);
+			}
+			c = 1;
+		}
+	});
+	c--;
 }

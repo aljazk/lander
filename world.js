@@ -7,11 +7,27 @@ function createWrold(){
 	return new b2World(worldAABB, gravity, doSleep);
 }
 
+var m_w = 0;
+var m_z = 987654321;
+var mask = 0xffffffff;
+
+function seed(i) {
+    m_w = i;
+}
+
+function random(){
+    m_z = (36969 * (m_z & 65535) + (m_z >> 16)) & mask;
+    m_w = (18000 * (m_w & 65535) + (m_w >> 16)) & mask;
+    var result = ((m_z << 16) + m_w) & mask;
+    result /= 4294967296;
+    return result + 0.5;
+}
+
 function createGround(){
 	var height;
 	var oldHeight = 50;
 	for(var i=-WorldX/50/2; i<WorldX/50/2; i++){
-		height = Math.floor((Math.random() * 50) + 30);
+		height = Math.floor((random() * 50) + 30);
 		var points = [[-50, oldHeight], [50, height], [50, 200], [-50, 200]];
 		oldHeight = height;
 		createPoly(i*101, WorldY-200, points, 1);
@@ -25,7 +41,7 @@ function createPoly(x,y, points, index){
 	for (var i = 0; i < points.length; i++) {
 		polyDef.vertices[i].Set(points[i][0], points[i][1]);
 	}
-	polyDef.restitution = 0.1;
+	polyDef.restitution = 0.01;
 	var polyBd = new b2BodyDef();
 	polyBd.AddShape(polyDef);
 	polyBd.position.Set(x/zoom-posx,y/zoom-posy);
@@ -100,8 +116,12 @@ function drawWorld(world){
 			} else if (s.m_type == b2Shape.e_polyShape){
 				drawObjects(s, b.m_rotation);
 			}
-			bodyCount++;
+			var str = String(s.m_userData);
+			if (str.substring(0,4) == "ship"){
+				text(str.substring(4,str.length), Number(str.substring(4,str.length))*10, 100);
+			}
 		}
+		bodyCount++;
 	}
 	return bodyCount;
 }
@@ -194,10 +214,16 @@ function drawRect(){
 	ctx.stroke();
 }
 
-function text(mess, x,y){
+function text(message, x,y){
 	ctx.font = '18px Calibri';
 	ctx.fillStyle = 'black';
-	ctx.fillText(mess, x,y);
+	ctx.fillText(message, x,y);
+}
+
+function staticText(message, x, y){
+	ctx.font = windowHeight / 35 +"px Calibri";
+	ctx.fillStyle = 'white';
+	ctx.fillText(message, windowWidth / x,windowHeight / y);
 }
 
 function displayFps(){

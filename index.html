@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>Lander</title>	
-    <script src="jquery.js"></script> 
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.11.2.min.js"></script>
     <script src="lib/prototype-1.6.0.2.js"></script>
 
 		<!-- box2djs -->
@@ -74,6 +74,9 @@
 	<script src="listener.js"></script>
 	<script src="ships.js"></script>
 	<script src="buttons.js"></script>
+	<script src="menus.js"></script>
+	<script src="save.js"></script>
+	<script src="hud.js"></script>
 </head>
 <body style="margin: 0;">
 <canvas id="window" width="100", height="100", oncontextmenu="return false;">
@@ -101,29 +104,28 @@ createStat(400,windowHeight,windowWidth,20);
 createStat(0,500,20,windowHeight);
 createStat(windowWidth,500,20,windowHeight);
 */
-createGround();
-var t1, t2, shipHaul;
-createShip(-2000, WorldY-2000);
 var gf = new b2Vec2(0,0);
-shipHaul.m_linearVelocity.Add( b2Math.MulFV(t1.m_invMass, gf) );
-shipHaul.m_angularVelocity -= 0;
-var x = 10, z = 10, w = 1, g = 1;
+var x = 10, z = 10, w = 1, g = 1, c = 1, b = 1;
 var dragx = 0, dragy = 0;
 var drag = false;
 var wheelData;
 var keyW = false, keyA = false, keyD = false;
 //document.getElementById("demo").innerHTML = "World created";
 //start the loop
-zoom = 0.2, posx = WorldX/3.5, posy = -WorldY*0.38;
 window.requestAnimationFrame(mainLoop);
 var wait = 0;
-addButton("NEW GAME", 1.7, 3, 2, 1);
 
-addButton("LOAD GAME", 1.7, 2.7, 2, 1);
-addButton("OPTIONS", 1.7, 2.45, 2, 1);
-addButton("EXIT", 1.7, 2.25, 2, 1);
+switchMenu(0);
 
 function mainLoop(){
+	//disable backspace
+	function preventBackspaceHandler(evt) {
+		evt = evt || window.event;
+		if (evt.keyCode == 8) {
+			evt.preventDefault();
+		}
+	}
+	document.onkeydown = preventBackspaceHandler;
 	
 	//Fps
 	currentFrameTime = (new Date()).getTime();
@@ -142,14 +144,9 @@ function mainLoop(){
 	ctx.fillRect(0,0,windowWidth,windowHeight);
 	listenForEvents();
 	
-	var img = document.createElement('img');
-	img.src = 'images/background.jpg';
-	ctx.drawImage(img, 0, 0, windowWidth, windowHeight);
 	
-	var img = document.createElement('img');
-	img.src = 'images/main1.png';
-	ctx.drawImage(img, 0, 0, windowWidth, windowHeight);
-	drawButtons();
+	displayMenu();
+	
 	
 	displayFps();
 	window.requestAnimationFrame(mainLoop);
